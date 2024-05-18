@@ -24,7 +24,6 @@ export const ModAsyncStorage = {
     }
   },
   save: async (storageKey, value) => {
-    console.log('st', storageKey, value)
     try {
       await AsyncStorage.setItem(storageKey, value)
     } catch (error) {

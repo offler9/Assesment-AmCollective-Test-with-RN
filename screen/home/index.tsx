@@ -214,7 +214,7 @@ const Home = ({navigation}: any) => {
     getArticleData() // get article data from api
     getCommentData() // load comment data from storage
   }, [])
-  console.log('ss', replyComment?.selectedReplyComment, replyComment.type)
+
   return (
     <View style={{ flex: 1, backgroundColor: '#ededeb'}}>
 
