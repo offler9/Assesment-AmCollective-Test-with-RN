@@ -42,8 +42,8 @@ const CommentItem = ({
         {item?.replies?.length > 0 && (
           <View style={{ marginHorizontal: 6, paddingHorizontal: 7, borderLeftWidth: 0.3, paddingVertical: 4}}>
             {item?.replies?.map((repliesItem) => (
-              <View style={{ marginBottom: 6}}>
-                <View key={repliesItem?.reply_id} style={{ flexDirection: 'row', alignItems: 'center', gap: 5}}>
+              <View key={repliesItem?.reply_id} style={{ marginBottom: 6}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5}}>
                   <Text style={{ fontSize: 14, fontWeight: '500' }}>{repliesItem?.username}</Text>
                   <Text style={{ fontSize: 11 }}>{moment(repliesItem?.timestamp).fromNow()}</Text>
                 </View>
@@ -60,23 +60,25 @@ const CommentItem = ({
       </View>
   )
   return (
-    <View>
+    <>
       {/* render main comment item */}
-      <View style={{backgroundColor: '#ededeb', padding: 2, borderRadius: 5}}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-          <Text style={{ fontSize: 15.5, fontWeight: '600'}}>{username}</Text>
-          <Text style={{ fontSize: 11}}>{moment(timestamp).fromNow()}</Text>
+      <View style={{ paddingVertical: 5 }}>
+        <View style={{backgroundColor: '#ededeb', padding: 4, borderRadius: 5}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+            <Text style={{ fontSize: 15.5, fontWeight: '600'}}>{username}</Text>
+            <Text style={{ fontSize: 11}}>{moment(timestamp).fromNow()}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
+            <Text style={{ fontSize: 14.5, paddingLeft: 2}}>{commentText}</Text>
+            {/* <TouchableOpacity onPress={handleDeleteComment}>
+              <EvilIcons name="trash" size={18} color="#d13126" />
+            </TouchableOpacity> */}
+          </View>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
-          <Text style={{ fontSize: 14.5, paddingLeft: 2}}>{commentText}</Text>
-          {/* <TouchableOpacity onPress={handleDeleteComment}>
-            <EvilIcons name="trash" size={18} color="#d13126" />
-          </TouchableOpacity> */}
-        </View>
+        <TouchableOpacity onPress={() => handlePressReply('1-reply')}>
+          <Text style={{ fontSize: 12.5, fontWeight: '500', opacity: 0.7}}>Reply</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => handlePressReply('1-reply')}>
-        <Text style={{ fontSize: 12.5, fontWeight: '500', opacity: 0.7}}>Reply</Text>
-      </TouchableOpacity>
 
       {repliesTotal > 0 && (
         <TouchableOpacity
@@ -99,7 +101,7 @@ const CommentItem = ({
         />
       )}
 
-    </View>
+    </>
   )
  }
 
