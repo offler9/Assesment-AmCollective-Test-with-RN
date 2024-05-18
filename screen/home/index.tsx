@@ -18,7 +18,7 @@ import ArticleItem from './components/articleItem'
 import { ArticleCommentProps, ArticleCommentRepliesProps, ArticleDataProps, RepliedComponentProps } from './prototype'
 
 const Home = ({navigation}: any) => {
-  const [showModal, setShowModal] = useState(false)
+  const [previewArticleModal, setPreviewArticleModal] = useState(false)
   const [comment, setComment] = useState('')
   const [showCommentComponent, setShowCommentComponent] = useState(false) 
   const [articleLink, setArticleLink] = useState('')
@@ -48,7 +48,7 @@ const Home = ({navigation}: any) => {
 
   const handlePressArticle = (link:string) => {
       setArticleLink(link)
-      setShowModal(true)
+      setPreviewArticleModal(true)
   }
   const onPressCommentIcon = (articleID: string) => {
     setShowArticleID(articleID)
@@ -236,8 +236,8 @@ const Home = ({navigation}: any) => {
       <ModalContainer
         title=""
         description={''}
-        show={showModal}
-        onDismiss={() =>setShowModal(false)}
+        show={previewArticleModal}
+        onDismiss={() =>setPreviewArticleModal(false)}
         style={{ width: '100%', height: '70%'}}
       >
         <WebView 
@@ -247,7 +247,10 @@ const Home = ({navigation}: any) => {
           cacheEnabled
           allowsLinkPreview
         />
-        <Button title="Read article" onPress={() => navigation?.navigate('Webview', {articleLink})}/>
+        <Button title="Read article" onPress={() => {
+          setPreviewArticleModal(false)
+          navigation?.navigate('Webview', {articleLink})
+        } }/>
       </ModalContainer>
 
       {/* component for render comment sections */}
