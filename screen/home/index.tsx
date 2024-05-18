@@ -56,11 +56,14 @@ const Home = ({navigation}: any) => {
   }
 
   const addCommentOrReply = () => {
+    // Clone the original comment data array
     const updatedData = [...commentData]
-    const commentIndex = updatedData?.findIndex(item => item?.comment_id === replyComment.selectedReplyComment?.comment_id)
-    const commentToUpdate = updatedData[commentIndex]
-    if (commentIndex === -1) return
-    const userCommentReply = {
+  
+    // Find the index of the comment to update or -1 if it's a new comment
+    const commentIndex = updatedData.findIndex(item => item?.comment_id === replyComment.selectedReplyComment?.comment_id)
+    
+    // Prepare the new comment or reply object
+    const newCommentOrReply = {
       reply_id: Math.floor(Math.random() * 9000) + 1000,
       comment_id: replyComment.selectedReplyComment?.comment_id || '',
       username: userInfo?.userInfo?.username || '',
@@ -69,22 +72,23 @@ const Home = ({navigation}: any) => {
       replies: [],
       replies_count: 0,
     }
-    if (replyComment?.showReplyComponent) {
-      switch (replyComment.type) {
-        case '1-reply':
-          // Adding a reply to an existing comment
-          commentToUpdate.replies.push(userCommentReply)
-          commentToUpdate.replies_count++
-          break
-        case '2-reply':
-          const commentRepliesIndex = commentToUpdate.replies?.findIndex((item) => item?.reply_id === replyComment?.selectedReplyComment?.reply_id)
+  
+    // Handle adding a new comment or reply to an existing comment
+    if (commentIndex !== -1 && replyComment.showReplyComponent) {
+      const commentToUpdate = updatedData[commentIndex]
+      if (replyComment.type === '1-reply') {
+        // Adding a reply to an existing comment
+        commentToUpdate.replies.push(newCommentOrReply)
+        commentToUpdate.replies_count++
+      } else if (replyComment.type === '2-reply') {
+        // Adding a reply to a reply of an existing comment
+        const commentRepliesIndex = commentToUpdate.replies.findIndex(item => item?.reply_id === replyComment?.selectedReplyComment?.reply_id)
+        if (commentRepliesIndex !== -1) {
           const commentRepliesToUpdate = commentToUpdate.replies[commentRepliesIndex]
-          commentRepliesToUpdate.replies.push(userCommentReply)
+          commentRepliesToUpdate.replies.push(newCommentOrReply)
           commentRepliesToUpdate.replies_count++
           commentToUpdate.replies_count++
-          break
-        default:
-          break
+        }
       }
     } else {
       // Adding a new comment
@@ -98,23 +102,18 @@ const Home = ({navigation}: any) => {
         replies_count: 0,
         replies: [],
       }
-  
       updatedData.push(userComment)
     }
   
     // Save updated data to AsyncStorage
     ModAsyncStorage.save(USER_COMMENT, JSON.stringify(updatedData))
-  
-    // Reset state
-    setComment('')
-    setReplyComment({
-      showReplyComponent: false,
-      selectedReplyComment: null,
-      type: ''
-    })
-  
-    // Update state with the new data
-    setCommentData(updatedData)
+      .then(() => {
+        // Reset state and update comment data
+        setComment('')
+        setReplyComment({ showReplyComponent: false, selectedReplyComment: null, type: '' })
+        setCommentData(updatedData)
+      })
+      .catch(error => console.error("Error saving comment data to AsyncStorage:", error))
   }
   
   // const handleDeleteComment = (commentItem: ArticleCommentProps) => {
@@ -133,7 +132,7 @@ const Home = ({navigation}: any) => {
           selectedReplyComment: item,
           type: type,
         })
-        break;
+        break
       case '2-reply':
         setReplyComment({
           showReplyComponent: true,
@@ -269,7 +268,7 @@ const Home = ({navigation}: any) => {
             ListHeaderComponent={FlatListCommentHeader}
             ListEmptyComponent={FlatListEmptyCommentComponent}
           />
-          <View style={{ margin: 10, borderWidth: 0.7, borderRadius: 6, padding: 8}} >
+          <View style={{ margin: 15, borderWidth: 0.7, borderRadius: 6, padding: 8}} >
             {replyComment.showReplyComponent && (
               <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                 <Text style={{}}>Replying to {replyComment?.selectedReplyComment?.username}</Text>
