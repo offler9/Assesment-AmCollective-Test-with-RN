@@ -1,11 +1,10 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ActivityIndicator, Button, FlatList, Text, TouchableOpacity, View,
-  TextInput,
 } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { EvilIcons } from '@expo/vector-icons'
-import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet"
+import BottomSheet, { BottomSheetFlatList, BottomSheetTextInput } from "@gorhom/bottom-sheet"
 
 import { useArticleContext } from '@/context/article'
 import ModalContainer from '@/components/Modal'
@@ -282,7 +281,7 @@ const Home = ({navigation}: any) => {
               </View>
             )}
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <TextInput
+              <BottomSheetTextInput
                 ref={inputRef}
                 placeholder="write a comment"
                 autoFocus
